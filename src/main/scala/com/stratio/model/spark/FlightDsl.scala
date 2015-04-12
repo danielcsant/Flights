@@ -11,7 +11,9 @@ class FlightCsvReader(self: RDD[String]) {
      * Parser the csv file with the format described in te readme.md file to a Fligth class
      *
      */
-    def toFlight: RDD[Flight] = ???
+    def toFlight: RDD[Flight] = {
+      self.map(stringFlight => Flight(stringFlight.split(",")))
+    }
 
     /**
      *
