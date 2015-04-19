@@ -20,7 +20,16 @@ class FlightCsvReader(self: RDD[String]) {
      * Obtain the parser errors
      *
      */
-    def toErrors: RDD[(String, String)] = ???
+    def toErrors: RDD[(String, String)] = {
+      self.map(data => data.split(","))
+        .flatMap(row => if (!row(0).forall(_.isDigit))
+                          Seq(("ClassCastException", row(0)))
+                        else if (!row(15).forall(_.isDigit))
+                          Seq(("ClassCastException", row(15)))
+                        else if (List(1,2,3,4,5,6,7,8,9,10,11,12).contains(row(1)))
+                          Seq(("Missmatch", row(1)))
+                        else Seq())
+    }
   }
 
   class FlightFunctions(self: RDD[Flight]) {
